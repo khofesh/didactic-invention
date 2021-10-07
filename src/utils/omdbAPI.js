@@ -6,6 +6,8 @@ export async function fetchMovieData(apiKey, title = "batman", page = "1") {
       `http://www.omdbapi.com/?apikey=${apiKey}&r=json&s=${title}&page=${page}`
     );
 
+    console.log("param page:", page);
+
     return response;
   } catch (error) {
     console.log(error);

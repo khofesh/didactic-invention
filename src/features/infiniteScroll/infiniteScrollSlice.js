@@ -10,8 +10,12 @@ const initialState = {
 
 export const fetchMovieAsync = createAsyncThunk(
   "infinite/fetchMovie",
-  async () => {
-    const response = await fetchMovieData(process.env.REACT_APP_OMDB_KEY);
+  async ({ title, page }) => {
+    const response = await fetchMovieData(
+      process.env.REACT_APP_OMDB_KEY,
+      title,
+      page
+    );
     console.log("fetchMovieAsync", response.data);
 
     return response.data;
@@ -31,7 +35,7 @@ export const infiniteSlice = createSlice({
         state.status = "idle";
         state.movieData = isEmpty(state.movieData)
           ? action.payload.Search
-          : [state.movieData, ...action.payload.Search];
+          : [...state.movieData, ...action.payload.Search];
         state.totalResults = action.payload.totalResults;
       });
   },

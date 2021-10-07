@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import isEmpty from "lodash.isempty";
 
@@ -13,10 +13,28 @@ export function InfiniteScroll() {
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const dispatch = useDispatch();
+  const [page, pageSet] = useState(1);
+
+  window.onscroll = async () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      if (status !== "loading") {
+        await dispatch(fetchMovieAsync({ page: page + 1, title: "batman" }));
+        pageSet(page + 1);
+      }
+    }
+  };
+
+  const getMovieData = useCallback(
+    () => dispatch(fetchMovieAsync({ page: 1, title: "batman" })),
+    [dispatch]
+  );
 
   useEffect(() => {
-    dispatch(fetchMovieAsync());
-  }, [dispatch]);
+    getMovieData();
+  }, [getMovieData]);
 
   useEffect(() => {
     console.log("fuck", movieData);
