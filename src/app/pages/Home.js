@@ -4,7 +4,7 @@ import { InfiniteScroll } from "../../features/infiniteScroll/InfiniteScroll";
 export default function Home() {
   return (
     <div>
-      <InfiniteScroll />
+      <InfiniteScroll page="/" />
     </div>
   );
 }

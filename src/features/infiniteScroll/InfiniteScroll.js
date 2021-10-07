@@ -6,7 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link, useLocation } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import { Link } from "react-router-dom";
 
 import {
   fetchMovieAsync,
@@ -16,11 +17,11 @@ import {
 } from "./infiniteScrollSlice";
 import styles from "./InfiniteScroll.module.css";
 
-export function InfiniteScroll() {
+export function InfiniteScroll(props) {
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const dispatch = useDispatch();
-  const location = useLocation();
+  const propsPage = props.page;
   const [page, pageSet] = useState(1);
   const [title, titleSet] = useState("batman");
   const [showModal, showModalSet] = useState(false);
@@ -31,7 +32,7 @@ export function InfiniteScroll() {
       window.innerHeight + document.documentElement.scrollTop ===
       document.documentElement.offsetHeight
     ) {
-      if (status !== "loading" && location.pathname === "/") {
+      if (status !== "loading" && propsPage === "/") {
         dispatch(fetchMovieAsync({ page: page + 1, title: title }));
         pageSet(page + 1);
       }
@@ -54,17 +55,15 @@ export function InfiniteScroll() {
   };
 
   const getMovieData = useCallback(
-    () => dispatch(fetchMovieAsync({ page: 1, title: "batman" })),
+    () => dispatch(fetchMovieRewriteAsync({ page: 1, title: "batman" })),
     [dispatch]
   );
 
   useEffect(() => {
-    getMovieData();
-  }, [getMovieData]);
-
-  useEffect(() => {
-    console.log("fuck", movieData);
-  }, [movieData]);
+    if (propsPage === "/" && isEmpty(movieData)) {
+      getMovieData();
+    }
+  }, [getMovieData, propsPage, movieData]);
 
   return (
     <div>
@@ -122,16 +121,21 @@ export function InfiniteScroll() {
           <Modal.Title>{selected ? selected.Title : "Movie Title"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Row>
-            <Col xs={6} md={4}>
-              <Image src={selected.Poster} fluid width="100" height="200" />
-            </Col>
-            <Col xs={6} md={4}>
-              <p>Year: {selected ? selected.Year : "Movie Year"}</p>
-              <p>ID: {selected ? selected.imdbID : "IMDB ID"}</p>
-              <Link to={`/movie-detail/${selected.imdbID}`}>Movie Detail</Link>
-            </Col>
-          </Row>
+          <Container>
+            <Row className="justify-content-md-center">
+              <Col xs={12}>
+                <Image
+                  src={selected.Poster}
+                  className="rounded mx-auto d-block"
+                />
+              </Col>
+              <Col xs={6} md={4}>
+                <Link to={`/movie-detail/${selected.imdbID}`}>
+                  Movie Detail
+                </Link>
+              </Col>
+            </Row>
+          </Container>
         </Modal.Body>
       </Modal>
     </div>

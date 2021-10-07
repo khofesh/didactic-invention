@@ -47,9 +47,12 @@ export const infiniteSlice = createSlice({
       })
       .addCase(fetchMovieAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.movieData = isEmpty(state.movieData)
+        const arr = isEmpty(state.movieData)
           ? action.payload.Search
           : [...state.movieData, ...action.payload.Search];
+        state.movieData = [
+          ...new Map(arr.map((item) => [item["imdbID"], item])).values(),
+        ];
         state.totalResults = action.payload.totalResults;
       })
       .addCase(fetchMovieRewriteAsync.pending, (state) => {
