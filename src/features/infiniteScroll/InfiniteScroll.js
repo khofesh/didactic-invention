@@ -16,6 +16,8 @@ import {
   fetchMovieRewriteAsync,
   changeTitle,
   selectTitle,
+  selectPage,
+  incrementPage,
 } from "./infiniteScrollSlice";
 import styles from "./InfiniteScroll.module.css";
 
@@ -23,15 +25,14 @@ export function InfiniteScroll() {
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const title = useSelector(selectTitle);
+  const page = useSelector(selectPage);
   const dispatch = useDispatch();
-  const [page, pageSet] = useState(1);
   const [showModal, showModalSet] = useState(false);
   const [selected, selectedSet] = useState({});
 
   const actionTextChange = (e) => {
     console.log(e.target.value);
     dispatch(fetchMovieRewriteAsync({ page: 1, title: e.target.value }));
-    // titleSet(e.target.value);
     dispatch(changeTitle(e.target.value));
   };
 
@@ -52,21 +53,11 @@ export function InfiniteScroll() {
     ) {
       if (status !== "loading") {
         dispatch(fetchMovieAsync({ page: page + 1, title: title }));
-        pageSet(page + 1);
+        dispatch(incrementPage());
         console.log("executed");
       }
     }
   }, [dispatch, page, status, title]);
-
-  // const getMovieData = useCallback(() => {
-  //   if (title) {
-  //     dispatch(fetchMovieRewriteAsync({ page: 1, title: "batman" }));
-  //   }
-  // }, [dispatch, title]);
-
-  // useEffect(() => {
-  //   getMovieData();
-  // }, [getMovieData]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, true);
