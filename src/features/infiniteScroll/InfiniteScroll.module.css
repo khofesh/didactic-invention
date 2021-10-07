@@ -29,13 +29,21 @@
 
 /* Style the search box inside the navigation bar */
 .topnav input[type="text"] {
-  float: right;
+  float: none;
   padding: 6px;
   border: 1px solid #ccc !important;
   margin-top: 8px;
   margin-right: 16px;
   font-size: 17px;
   border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.movie {
+  padding-top: 2px;
+  border: 1px solid #ccc !important;
+  border-radius: 5px;
+  margin: 5px;
 }
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */

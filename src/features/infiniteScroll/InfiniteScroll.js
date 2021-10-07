@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import isEmpty from "lodash.isempty";
+
 import {
   fetchMovieAsync,
   selectMovieData,
@@ -14,7 +16,11 @@ export function InfiniteScroll() {
 
   useEffect(() => {
     dispatch(fetchMovieAsync());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("fuck", movieData);
+  }, [movieData]);
 
   return (
     <div>
@@ -22,7 +28,16 @@ export function InfiniteScroll() {
         <input type="text" placeholder="Search Movie.." />
       </div>
 
-      <p>hello from infinite scroll</p>
+      <div>
+        {isEmpty(movieData)
+          ? null
+          : movieData.Search.map((movie, index) => (
+              <div className={styles.movie} key={index}>
+                <p>{movie.Title}</p>
+                <img src={movie.Poster} alt="Italian Trulli"></img>
+              </div>
+            ))}
+      </div>
 
       <div>
         <p>status: {status}</p>

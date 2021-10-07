@@ -5,7 +5,6 @@ export async function fetchMovieData(apiKey, title = "batman", page = "1") {
     const response = await axios.get(
       `http://www.omdbapi.com/?apikey=${apiKey}&r=json&s=${title}&page=${page}`
     );
-    console.log(response.data);
 
     return response;
   } catch (error) {
