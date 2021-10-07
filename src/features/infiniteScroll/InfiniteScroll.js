@@ -6,6 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Link, useHistory } from "react-router-dom";
+
 import {
   fetchMovieAsync,
   selectMovieData,
@@ -15,6 +17,7 @@ import {
 import styles from "./InfiniteScroll.module.css";
 
 export function InfiniteScroll() {
+  let history = useHistory();
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const dispatch = useDispatch();
@@ -34,6 +37,10 @@ export function InfiniteScroll() {
       }
     }
   };
+
+  function handleClick(imdbID) {
+    history.push(`/detail/${imdbID}`);
+  }
 
   const actionTextChange = (e) => {
     dispatch(fetchMovieRewriteAsync({ page: 1, title: e.target.value }));
@@ -126,6 +133,7 @@ export function InfiniteScroll() {
             <Col xs={6} md={4}>
               <p>Year: {selected ? selected.Year : "Movie Year"}</p>
               <p>ID: {selected ? selected.imdbID : "IMDB ID"}</p>
+              <Link to={`/movie-detail/${selected.imdbID}`}>Movie Detail</Link>
             </Col>
           </Row>
         </Modal.Body>
