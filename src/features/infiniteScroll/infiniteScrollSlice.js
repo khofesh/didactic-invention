@@ -31,5 +31,6 @@ export const infiniteSlice = createSlice({
 });
 
 export const selectMovieData = (state) => state.counter.movieData;
+export const selectStatus = (state) => state.counter.status;
 
 export default infiniteSlice.reducer;
