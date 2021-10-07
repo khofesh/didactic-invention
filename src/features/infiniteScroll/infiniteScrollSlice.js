@@ -6,6 +6,7 @@ const initialState = {
   movieData: [],
   status: "idle",
   totalResults: "0",
+  page: 1,
 };
 
 export const fetchMovieAsync = createAsyncThunk(
@@ -39,7 +40,15 @@ export const fetchMovieRewriteAsync = createAsyncThunk(
 export const infiniteSlice = createSlice({
   name: "infiniteScroll",
   initialState,
-  reducers: {},
+  reducers: {
+    increment: (state) => {
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes
+      state.page += 1;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMovieAsync.pending, (state) => {
@@ -47,12 +56,12 @@ export const infiniteSlice = createSlice({
       })
       .addCase(fetchMovieAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        const arr = isEmpty(state.movieData)
+        const arr = [...state.movieData, ...action.payload.Search];
+
+        state.movieData = isEmpty(state.movieData)
           ? action.payload.Search
-          : [...state.movieData, ...action.payload.Search];
-        state.movieData = [
-          ...new Map(arr.map((item) => [item["imdbID"], item])).values(),
-        ];
+          : [...new Map(arr.map((item) => [item["imdbID"], item])).values()];
+
         state.totalResults = action.payload.totalResults;
       })
       .addCase(fetchMovieRewriteAsync.pending, (state) => {
@@ -65,6 +74,8 @@ export const infiniteSlice = createSlice({
       });
   },
 });
+
+export const { increment } = infiniteSlice.actions;
 
 export const selectMovieData = (state) => {
   console.log("state", state);

@@ -21,23 +21,10 @@ export function InfiniteScroll(props) {
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const dispatch = useDispatch();
-  const propsPage = props.page;
   const [page, pageSet] = useState(1);
   const [title, titleSet] = useState("batman");
   const [showModal, showModalSet] = useState(false);
   const [selected, selectedSet] = useState({});
-
-  window.onscroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      if (status !== "loading" && propsPage === "/") {
-        dispatch(fetchMovieAsync({ page: page + 1, title: title }));
-        pageSet(page + 1);
-      }
-    }
-  };
 
   const actionTextChange = (e) => {
     dispatch(fetchMovieRewriteAsync({ page: 1, title: e.target.value }));
@@ -54,16 +41,35 @@ export function InfiniteScroll(props) {
     showModalSet(false);
   };
 
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      if (status !== "loading") {
+        dispatch(fetchMovieAsync({ page: page + 1, title: title }));
+        pageSet(page + 1);
+        console.log("executed");
+      }
+    }
+  }, [dispatch, page, status, title]);
+
   const getMovieData = useCallback(
     () => dispatch(fetchMovieRewriteAsync({ page: 1, title: "batman" })),
     [dispatch]
   );
 
   useEffect(() => {
-    if (propsPage === "/" && isEmpty(movieData)) {
-      getMovieData();
-    }
-  }, [getMovieData, propsPage, movieData]);
+    getMovieData();
+  }, [getMovieData]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [handleScroll]);
 
   return (
     <div>
