@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "http://www.omdbapi.com/*"
+  to = "https://didactic-invention.netlify.app/:splat"
+  status = 301
+  force = true
