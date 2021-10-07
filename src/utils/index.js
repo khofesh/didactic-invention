@@ -1,4 +1,4 @@
-import { fetchMovieData } from "./omdbAPI";
+import { fetchMovieData, fetchMovieById } from "./omdbAPI";
 import { fetchCount } from "./counterAPI";
 
-export { fetchMovieData, fetchCount };
+export { fetchMovieData, fetchMovieById, fetchCount };
