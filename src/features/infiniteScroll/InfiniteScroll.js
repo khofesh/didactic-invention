@@ -31,17 +31,23 @@ export function InfiniteScroll() {
       <div className={styles.root}>
         {isEmpty(movieData)
           ? null
-          : movieData.map((movie, index) => (
-              <div className={styles.movie} key={index}>
-                <p className={styles.movieTitle}>{movie.Title}</p>
-                <img
-                  src={movie.Poster}
-                  alt={movie.Title}
-                  width="300"
-                  height="400"
-                ></img>
-              </div>
-            ))}
+          : movieData.map((movie, index) => {
+              if (isEmpty(movie.Title)) {
+                return null;
+              } else {
+                return (
+                  <div className={styles.movie} key={index}>
+                    <p className={styles.movieTitle}>{movie.Title}</p>
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                      width="300"
+                      height="400"
+                    ></img>
+                  </div>
+                );
+              }
+            })}
       </div>
 
       <div>

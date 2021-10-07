@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchMovieData } from "./omdbAPI";
+import { fetchMovieData } from "../../utils";
 import isEmpty from "lodash.isempty";
 
 const initialState = {
