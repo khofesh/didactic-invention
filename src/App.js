@@ -1,7 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import { Counter } from "./features/counter/Counter";
+import { InfiniteScroll } from "./features/infiniteScroll/InfiniteScroll";
+import "./App.css";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             React Redux
           </a>
         </span>
+        <InfiniteScroll />
       </header>
     </div>
   );
