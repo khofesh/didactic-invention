@@ -1,7 +1,11 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import isEmpty from "lodash.isempty";
-
+import Card from "react-bootstrap/Card";
+import Modal from "react-bootstrap/Modal";
+import Image from "react-bootstrap/Image";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import {
   fetchMovieAsync,
   selectMovieData,
@@ -16,6 +20,8 @@ export function InfiniteScroll() {
   const dispatch = useDispatch();
   const [page, pageSet] = useState(1);
   const [title, titleSet] = useState("batman");
+  const [showModal, showModalSet] = useState(false);
+  const [selected, selectedSet] = useState({});
 
   window.onscroll = () => {
     if (
@@ -32,6 +38,16 @@ export function InfiniteScroll() {
   const actionTextChange = (e) => {
     dispatch(fetchMovieRewriteAsync({ page: 1, title: e.target.value }));
     titleSet(e.target.value);
+  };
+
+  const movieClicked = (data) => {
+    selectedSet(data);
+    console.log(data);
+    showModalSet(true);
+  };
+
+  const handleClose = () => {
+    showModalSet(false);
   };
 
   const getMovieData = useCallback(
@@ -69,15 +85,22 @@ export function InfiniteScroll() {
               return null;
             } else {
               return (
-                <div className={styles.movie} key={index}>
-                  <p className={styles.movieTitle}>{movie.Title}</p>
-                  <img
+                <Card
+                  style={{ width: "16rem", margin: "0.3rem" }}
+                  key={index}
+                  onClick={() => movieClicked(movie)}
+                >
+                  <Card.Img
+                    variant="top"
                     src={movie.Poster}
                     alt={movie.Title}
                     width="300"
                     height="400"
-                  ></img>
-                </div>
+                  />
+                  <Card.Body>
+                    <Card.Text>{movie.Title}</Card.Text>
+                  </Card.Body>
+                </Card>
               );
             }
           })
@@ -89,6 +112,24 @@ export function InfiniteScroll() {
           <p>{status}</p>
         </div>
       ) : null}
+
+      {/* <!-- The Modal --> */}
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{selected ? selected.Title : "Movie Title"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col xs={6} md={4}>
+              <Image src={selected.Poster} fluid width="100" height="200" />
+            </Col>
+            <Col xs={6} md={4}>
+              <p>Year: {selected ? selected.Year : "Movie Year"}</p>
+              <p>ID: {selected ? selected.imdbID : "IMDB ID"}</p>
+            </Col>
+          </Row>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
