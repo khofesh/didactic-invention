@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import {
   fetchMovieAsync,
@@ -20,6 +20,7 @@ export function InfiniteScroll() {
   const movieData = useSelector(selectMovieData);
   const status = useSelector(selectStatus);
   const dispatch = useDispatch();
+  const location = useLocation();
   const [page, pageSet] = useState(1);
   const [title, titleSet] = useState("batman");
   const [showModal, showModalSet] = useState(false);
@@ -30,7 +31,7 @@ export function InfiniteScroll() {
       window.innerHeight + document.documentElement.scrollTop ===
       document.documentElement.offsetHeight
     ) {
-      if (status !== "loading") {
+      if (status !== "loading" && location.pathname === "/") {
         dispatch(fetchMovieAsync({ page: page + 1, title: title }));
         pageSet(page + 1);
       }
