@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchMovieData } from "./omdbAPI";
+import isEmpty from "lodash.isempty";
 
 const initialState = {
-  movieData: {},
+  movieData: [],
   status: "idle",
+  totalResults: "0",
 };
 
 export const fetchMovieAsync = createAsyncThunk(
@@ -27,7 +29,10 @@ export const infiniteSlice = createSlice({
       })
       .addCase(fetchMovieAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.movieData = action.payload;
+        state.movieData = isEmpty(state.movieData)
+          ? action.payload.Search
+          : [state.movieData, ...action.payload.Search];
+        state.totalResults = action.payload.totalResults;
       });
   },
 });

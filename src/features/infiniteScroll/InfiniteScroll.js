@@ -28,13 +28,18 @@ export function InfiniteScroll() {
         <input type="text" placeholder="Search Movie.." />
       </div>
 
-      <div>
+      <div className={styles.root}>
         {isEmpty(movieData)
           ? null
-          : movieData.Search.map((movie, index) => (
+          : movieData.map((movie, index) => (
               <div className={styles.movie} key={index}>
-                <p>{movie.Title}</p>
-                <img src={movie.Poster} alt="Italian Trulli"></img>
+                <p className={styles.movieTitle}>{movie.Title}</p>
+                <img
+                  src={movie.Poster}
+                  alt={movie.Title}
+                  width="300"
+                  height="400"
+                ></img>
               </div>
             ))}
       </div>
