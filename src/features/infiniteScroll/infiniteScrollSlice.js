@@ -7,6 +7,7 @@ const initialState = {
   status: "idle",
   totalResults: "0",
   page: 1,
+  title: "",
 };
 
 export const fetchMovieAsync = createAsyncThunk(
@@ -51,6 +52,9 @@ export const infiniteSlice = createSlice({
     incrementPageByAmount: (state, action) => {
       state.page += action.payload;
     },
+    changeTitle: (state, action) => {
+      state.title = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -78,7 +82,8 @@ export const infiniteSlice = createSlice({
   },
 });
 
-export const { incrementPage, incrementPageByAmount } = infiniteSlice.actions;
+export const { incrementPage, incrementPageByAmount, changeTitle } =
+  infiniteSlice.actions;
 
 export const selectMovieData = (state) => {
   console.log("state", state);
@@ -86,5 +91,6 @@ export const selectMovieData = (state) => {
 };
 export const selectStatus = (state) => state.infiniteScroll.status;
 export const selectPage = (state) => state.infiniteScroll.page;
+export const selectTitle = (state) => state.infiniteScroll.title;
 
 export default infiniteSlice.reducer;
