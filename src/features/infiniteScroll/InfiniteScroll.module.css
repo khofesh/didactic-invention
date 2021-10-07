@@ -25,6 +25,9 @@
 .topnav a.active {
   background-color: #2196f3;
   color: white;
+  position: fixed;
+  top: 0px;
+  width: 100%;
 }
 
 /* Style the search box inside the navigation bar */

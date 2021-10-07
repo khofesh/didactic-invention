@@ -22,6 +22,20 @@ export const fetchMovieAsync = createAsyncThunk(
   }
 );
 
+export const fetchMovieRewriteAsync = createAsyncThunk(
+  "infinite/fetchMovieRewrite",
+  async ({ title, page }) => {
+    const response = await fetchMovieData(
+      process.env.REACT_APP_OMDB_KEY,
+      title,
+      page
+    );
+    console.log("fetchMovieRewriteAsync", response.data);
+
+    return response.data;
+  }
+);
+
 export const infiniteSlice = createSlice({
   name: "infiniteScroll",
   initialState,
@@ -36,6 +50,14 @@ export const infiniteSlice = createSlice({
         state.movieData = isEmpty(state.movieData)
           ? action.payload.Search
           : [...state.movieData, ...action.payload.Search];
+        state.totalResults = action.payload.totalResults;
+      })
+      .addCase(fetchMovieRewriteAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchMovieRewriteAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.movieData = action.payload.Search;
         state.totalResults = action.payload.totalResults;
       });
   },
