@@ -41,12 +41,15 @@ export const infiniteSlice = createSlice({
   name: "infiniteScroll",
   initialState,
   reducers: {
-    increment: (state) => {
+    incrementPage: (state) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.page += 1;
+    },
+    incrementPageByAmount: (state, action) => {
+      state.page += action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -75,12 +78,13 @@ export const infiniteSlice = createSlice({
   },
 });
 
-export const { increment } = infiniteSlice.actions;
+export const { incrementPage, incrementPageByAmount } = infiniteSlice.actions;
 
 export const selectMovieData = (state) => {
   console.log("state", state);
   return state.infiniteScroll.movieData;
 };
 export const selectStatus = (state) => state.infiniteScroll.status;
+export const selectPage = (state) => state.infiniteScroll.page;
 
 export default infiniteSlice.reducer;
