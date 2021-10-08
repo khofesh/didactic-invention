@@ -1,5 +1,15 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
+## key packages
+
+1. @reduxjs/toolkit
+2. react-router
+3. react.js
+
+## get api key
+
+go to https://omdbapi.com/apikey.aspx, select the 'FREE!' account
+
 ## environment variables
 
 in the root folder add a file named `.env.local` and add your omdb api key:
