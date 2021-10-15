@@ -18,6 +18,20 @@ in the root folder add a file named `.env.local` and add your omdb api key:
 REACT_APP_OMDB_KEY=yourKeyHere
 ```
 
+## Docker
+
+build the image
+
+```
+docker build --build-arg REACT_APP_OMDB_KEY=someKey -t khofesh/aab:didactic-image -f ./Dockerfile .
+```
+
+run container
+
+```
+docker run --name didactic --rm --detach --publish 8080:8080 khofesh/aab:didactic-image
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
