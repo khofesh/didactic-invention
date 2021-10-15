@@ -2,10 +2,11 @@ pipeline {
     agent any
     environment {
         CI = 'true'
-        REACT_APP_OMDB_KEY = 'yourkey'
-        IMAGE_REGISTRY = 'google artifact registry'
-        IMAGE_VERSION = "${env.BUILD_NUMBER}"
-        IMAGE_NAME = "gcr.io/<GOOGLE_CLOUD_PROJECT_ID>/back-end:v1.1.${IMAGE_VERSION}"
+        REACT_APP_OMDB_KEY = 'your key'
+        IMAGE_REGISTRY = 'your registry'
+        IMAGE_VERSION = "1.${env.BUILD_NUMBER}"
+        IMAGE_NAME = "${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION}"
+        SERVICE_NAME = "didactic"
     }
     stages {
         stage('Clone Sources') {
@@ -32,7 +33,7 @@ pipeline {
         }
         stage("Deploy new image to Cloud Run"){
             steps{
-                sh "gcloud run deploy --image ${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION} --platform=managed --region=us-central1 --port=8080 --revision-suffix=${IMAGE_VERSION}"
+                sh "gcloud run deploy ${SERVICE_NAME} --image ${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION} --platform=managed --region=us-central1 --port=8080 --revision-suffix=${IMAGE_VERSION}"
             }
         }
     }
