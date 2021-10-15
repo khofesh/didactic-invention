@@ -27,7 +27,7 @@ pipeline {
         }
         stage ("Prune docker images"){
             steps{
-                sh "docker image prune"
+                sh "docker image prune --force"
             }
         }
         stage("Deploy new image to Cloud Run"){
