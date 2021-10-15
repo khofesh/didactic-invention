@@ -1,29 +1,38 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
-    }
+    agent any
     environment {
         CI = 'true'
+        REACT_APP_OMDB_KEY = 'yourkey'
+        IMAGE_REGISTRY = 'google artifact registry'
+        IMAGE_VERSION = "${env.BUILD_NUMBER}"
+        IMAGE_NAME = "gcr.io/<GOOGLE_CLOUD_PROJECT_ID>/back-end:v1.1.${IMAGE_VERSION}"
     }
     stages {
-        stage('Build') {
+        stage('Clone Sources') {
             steps {
-                sh 'npm install'
+                // Get some code from a GitHub repository
+                git 'https://github.com/khofesh/didactic-invention.git'
             }
         }
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh "docker build --build-arg REACT_APP_OMDB_KEY=${REACT_APP_OMDB_KEY} -t khofesh/aab:didactic-image -f ./Dockerfile ."
+                sh "docker tag khofesh/aab:didactic-image ${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION}"
             }
         }
-        stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+        stage("Push to Google Container Registry"){
+            steps{
+                sh "docker push ${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION}"
+            }
+        }
+        stage ("Prune docker images"){
+            steps{
+                sh "docker image prune"
+            }
+        }
+        stage("Deploy new image to Cloud Run"){
+            steps{
+                sh "gcloud run deploy --image ${IMAGE_REGISTRY}/didactic-image:${IMAGE_VERSION} --platform=managed --region=us-central1 --port=8080 --revision-suffix=${IMAGE_VERSION}"
             }
         }
     }
