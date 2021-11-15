@@ -4,7 +4,8 @@ FROM node:14.18-alpine as react-build
 WORKDIR /app
 COPY . ./
 ARG REACT_APP_OMDB_KEY
-RUN echo ${REACT_APP_OMDB_KEY} > .env.local
+RUN echo REACT_APP_OMDB_KEY=${REACT_APP_OMDB_KEY} > .env.local
+RUN cat .env.local
 RUN yarn
 RUN yarn build
 
