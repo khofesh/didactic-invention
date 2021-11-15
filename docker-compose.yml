@@ -3,5 +3,5 @@ services:
   didactic-ui:
     container_name: didactic-ui
     ports:
-      - "8081:80"
+      - "8081:8080"
     image: "khofesh/didactic-image"
